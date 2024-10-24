@@ -16,7 +16,7 @@ const usersController = {
       if (!req?.user || !req?.user?.id) {
         return res.status(500).json({ message: "Unauthorised" });
       }
-      const user = await usersDbModal.findById(req.user.id).select('-password');;
+      const user = await usersDbModal.findById(req.user.id).select('-password');
 
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -80,6 +80,63 @@ const usersController = {
     }
   },
   registerUser: async (req, res) => {},
+
+  updateUserPassword : async (req,res)=>{
+    // console.log(req.body);
+    
+    const { email, currentPassword, newPassword } = req.body;
+
+    try {
+      console.log("hiii");
+      // Find user by email
+      let user = await usersDbModal.findOne({ email });
+      console.log(user);
+      
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Check if the current password is correct
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ message: "Current password is incorrect" });
+      }
+
+      // Hash the new password
+      const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+      console.log(user.password);
+      // Update the password in the database
+      // user.password = hashedNewPassword;
+      console.log(hashedNewPassword);
+      
+      console.log(user.password);
+      
+      // await user.save();
+      const ref =await usersDbModal.findOneAndUpdate(
+        { email },
+        { password: hashedNewPassword },
+        { new: true } // Return the updated document
+      );
+      if(!ref){
+        console.log('error ref')
+        throw new Error('Something went wrong!')
+      }
+      console.log("User password updated in DB");
+
+      console.log(user.password);
+      
+
+      console.log(user);
+
+
+      return res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Server error" });
+    }
+  },
   loginUser: async (req, res) => {
     const { email, password } = req.body;
 

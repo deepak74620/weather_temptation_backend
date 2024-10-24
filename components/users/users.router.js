@@ -19,5 +19,10 @@ usersRouter.post(
     // authenticateToken,
     usersController.loginUser
 );
+usersRouter.post(
+    "/updatePassword",
+    authenticateToken,
+    usersController.updateUserPassword
+);
 
 module.exports = usersRouter;

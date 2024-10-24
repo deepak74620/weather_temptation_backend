@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const cookie = require("cookie");
 const friendsDbModal = require("../friends/friends.model");
-const favouriteDbModal = require("./favourite.model");
+// const favouriteDbModal = require("./favourite.model");
 dotenv.config();
 
 const tripsController = {
@@ -135,7 +135,19 @@ const tripsController = {
       if (!userId) {
         throw new Error("User id not provided");
       }
-      const { id, isFav } = req.body;
+      const { id, isFav,type } = req.body;
+      let isAvailable;
+      switch (type) {
+        case 'trip':
+          
+          break;
+      case 'food':
+        break;
+        case 'destination':
+          break;
+        default:
+          break;
+      }
       const isTrip = await tripsDbModal.findOne({ id: id });
       if (!isTrip) {
         throw new Error("Trip doesn't exists");
@@ -146,6 +158,7 @@ const tripsController = {
           userId: userId,
           tripId: id,
           isFav: Number(isFav),
+          type:type,
         });
         await newFav.save();
 

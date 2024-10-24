@@ -5,6 +5,9 @@ dotenv.config();
 const tripsdbSchema = new mongoose.Schema(
 	{
 		_id: { type: mongoose.Types.ObjectId },
+		name:{type:String,required:true},
+		isFav:{type:Boolean,default:false},
+		type:{type:String,default:'trip'},
         
 	},
 	{ strict: false, timestamps:true , collection: process.env.tripsModel }

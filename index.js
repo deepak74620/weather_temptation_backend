@@ -13,6 +13,7 @@ app.use(express.json({ limit: "25mb" }));
 const usersRouter = require('./components/users/users.router.js');
 const friendsRouter = require("./components/friends/friends.router.js");
 const tripsRouter = require("./components/trips/trips.router.js");
+const getAllRouter = require("./components/all/getAll.router.js");
 
 // MongoDB Connection
 mongoose
@@ -41,5 +42,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/", usersRouter);
+app.use("/api/v1/", getAllRouter);
 app.use("/api/v1/", friendsRouter);
 app.use("/api/v1/trips", tripsRouter);
